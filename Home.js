@@ -1,88 +1,69 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import {
+  Image,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import ActionButton from 'react-native-action-button';
+import colors from './colors';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({ children, title }) => {
-  const isDarkMode = useColorScheme() === 'dark';
+const EntryRow = ({ name = 'Name', amount = 0 }) => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <TouchableOpacity style={styles.entryRowBox}>
+      <Image
+        style={styles.entryRowIcon}
+        source={{
+          uri: 'https://reactnativecode.com/wp-content/uploads/2018/04/main_icon.png',
+        }}
+      />
+      <Text style={styles.entryRowName}>{name}</Text>
+      <Text style={styles.entryRowAmount}>{amount}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const DailyEntry = ({ date = '19-Nov', income = '100' }) => {
+  return (
+    <View style={styles.dailyEntryContainer}>
+      <View style={styles.dailyEntryHeader}>
+        <Text>Date</Text>
+        <Text>Income</Text>
+        <Text>Expenses</Text>
+      </View>
+      <EntryRow name="car" amount={10} />
+      <EntryRow />
+      <EntryRow />
     </View>
   );
 };
 
 const HomeScreen = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <SafeAreaView style={styles.background}>
+      <ActionButton
+        style={styles.actionButton}
+        buttonColor={colors.dark}
+        offsetY={40}
+        offsetX={16}
+        onPress={() => {
+          console.log('hi');
+        }}
+      />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        style={styles.background}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.background}>
+          <DailyEntry />
+          <DailyEntry />
+          <DailyEntry />
+          <DailyEntry />
+          <DailyEntry />
+          <DailyEntry />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -90,21 +71,52 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  actionButton: {
+    zIndex: 10,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  dailyEntryContainer: {
+    borderColor: colors.lightGrey,
+    borderWidth: 1,
+    margin: 12,
+    shadowColor: colors.dark,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    backgroundColor: colors.white,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  dailyEntryHeader: {
+    flexDirection: 'row',
+    paddingLeft: 20,
+    paddingVertical: 6,
+    borderBottomColor: colors.lightGrey,
+    borderBottomWidth: 1,
+    backgroundColor: colors.white,
   },
-  highlight: {
-    fontWeight: '700',
+  entryRowBox: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingVertical: 6,
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+  entryRowIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 25,
+  },
+  entryRowName: {
+    paddingLeft: 10,
+    color: colors.dark,
+  },
+  entryRowAmount: {
+    paddingLeft: 10,
+    color: colors.dark,
+  },
+  background: {
+    backgroundColor: colors.light,
   },
 });
 
