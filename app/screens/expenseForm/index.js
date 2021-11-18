@@ -11,11 +11,6 @@ import { connect } from 'react-redux';
 import colors from '../../config/colors';
 import { CREATE_EXPENSE } from '../../models/expense/actions';
 
-// const mapStateToProps = (state, props) => {
-//   const data = state.expense;
-//   return {data};
-// };
-
 const mapDispatchToProps = (dispatch, props) => ({
   createExpense: data => {
     dispatch({
@@ -27,11 +22,10 @@ const mapDispatchToProps = (dispatch, props) => ({
 
 const ExpenseFormScreen = ({ createExpense, navigation }) => {
   const [date] = useState(new Date());
-  const [name, setName] = useState('Drinks');
-  const [amount, setAmount] = useState('10');
+  const [name, setName] = useState(null);
+  const [amount, setAmount] = useState(null);
 
   const onSubmit = () => {
-    console.log('OK');
     createExpense({ name, amount, date });
     navigation.goBack();
   };

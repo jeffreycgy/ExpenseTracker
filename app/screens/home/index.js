@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Image,
   SafeAreaView,
@@ -14,8 +14,6 @@ import colors from '../../config/colors';
 
 const mapStateToProps = (state, props) => {
   const { expense } = state;
-  // console.log('state', Object.keys(data)[0]);
-  console.log('data---->', expense);
   return { expense };
 };
 
@@ -24,7 +22,7 @@ const mapDispatchToProps = (dispatch, props) => ({});
 const EntryRow = ({ data }) => {
   const { name, amount } = data;
   return (
-    <TouchableOpacity style={styles.entryRowBox}>
+    <TouchableOpacity style={styles.entryRowBox} disabled>
       <Image
         style={styles.entryRowIcon}
         source={{
@@ -60,11 +58,9 @@ const DailyEntry = ({ data }) => {
 };
 
 const renderDailyEntry = expense => {
-  console.log('render', expense);
   return (
     expense &&
     Object.keys(expense).map((key, index) => {
-      console.log(key, index);
       const data = expense[key];
       return <DailyEntry key={key} data={data} />;
     })
@@ -72,11 +68,6 @@ const renderDailyEntry = expense => {
 };
 
 const HomeScreen = ({ navigation, expense, viewExpenses }) => {
-  console.log('home', expense);
-  // useEffect(() => {
-  //   console.log('useEffect --->');
-  //   viewExpenses();
-  // }, [viewExpenses]);
   return (
     <SafeAreaView style={styles.background}>
       <ActionButton
@@ -91,10 +82,7 @@ const HomeScreen = ({ navigation, expense, viewExpenses }) => {
         contentInsetAdjustmentBehavior="automatic"
         style={styles.background}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.background}>
-          {/* <DailyEntry /> */}
-          {renderDailyEntry(expense)}
-        </View>
+        <View style={styles.background}>{renderDailyEntry(expense)}</View>
       </ScrollView>
     </SafeAreaView>
   );

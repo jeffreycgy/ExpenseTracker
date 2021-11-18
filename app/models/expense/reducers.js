@@ -1,4 +1,4 @@
-import { CREATE_EXPENSE, VIEW_EXPENSES } from './actions';
+import { CREATE_EXPENSE } from './actions';
 
 const initialState = {
   '2021-11-18': [
@@ -30,25 +30,18 @@ const reducer = (state = initialState, action) => {
     case CREATE_EXPENSE: {
       const { data } = action.payload;
       const { date } = data;
-      const id = Math.random().toString(16).slice(2);
       const keyString =
         date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
       let newState = {};
       for (const key in state) {
-        console.log('state key', key);
         if (key !== keyString) {
           let newObj = {};
           newObj[keyString] = [data];
-          // newState[keyString] = [data];
           newState = Object.assign(newObj, state);
         } else {
           newState = state[key].unshift(data);
         }
       }
-      console.log('newState', newState);
-      console.log('keyString', keyString);
-      // console.log('from reducer', data);
-      // return { ...state, ...payload };
       return newState;
     }
     default: {

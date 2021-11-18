@@ -6,7 +6,6 @@ function* handler() {
 }
 
 function* createExpense(action) {
-  // console.log('from sagas', action);
   try {
     // create expense
   } catch (err) {
