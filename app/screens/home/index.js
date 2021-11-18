@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -9,9 +9,20 @@ import {
   View,
 } from 'react-native';
 import ActionButton from 'react-native-action-button';
-import colors from './colors';
+import { connect } from 'react-redux';
+import colors from '../../config/colors';
 
-const EntryRow = ({ name = 'Name', amount = 0 }) => {
+const mapStateToProps = (state, props) => {
+  const { expense } = state;
+  // console.log('state', Object.keys(data)[0]);
+  console.log('data---->', expense);
+  return { expense };
+};
+
+const mapDispatchToProps = (dispatch, props) => ({});
+
+const EntryRow = ({ data }) => {
+  const { name, amount } = data;
   return (
     <TouchableOpacity style={styles.entryRowBox}>
       <Image
@@ -20,37 +31,60 @@ const EntryRow = ({ name = 'Name', amount = 0 }) => {
           uri: 'https://reactnativecode.com/wp-content/uploads/2018/04/main_icon.png',
         }}
       />
-      <Text style={styles.entryRowName}>{name}</Text>
+      <Text style={styles.entryRowName} numberOfLines={1}>
+        {name}
+      </Text>
       <Text style={styles.entryRowAmount}>{amount}</Text>
     </TouchableOpacity>
   );
 };
 
-const DailyEntry = ({ date = '19-Nov', income = '100' }) => {
+const DailyEntry = ({ data }) => {
+  const date =
+    data &&
+    data[0].date.toLocaleDateString('en-us', {
+      day: 'numeric',
+      month: 'short',
+    });
   return (
     <View style={styles.dailyEntryContainer}>
       <View style={styles.dailyEntryHeader}>
-        <Text>Date</Text>
-        <Text>Income</Text>
-        <Text>Expenses</Text>
+        <Text>{date || ''}</Text>
       </View>
-      <EntryRow name="car" amount={10} />
-      <EntryRow />
-      <EntryRow />
+      {data &&
+        data.map((item, index) => {
+          return <EntryRow key={item.id} data={item} />;
+        })}
     </View>
   );
 };
 
-const HomeScreen = () => {
+const renderDailyEntry = expense => {
+  console.log('render', expense);
+  return (
+    expense &&
+    Object.keys(expense).map((key, index) => {
+      console.log(key, index);
+      const data = expense[key];
+      return <DailyEntry key={key} data={data} />;
+    })
+  );
+};
+
+const HomeScreen = ({ navigation, expense, viewExpenses }) => {
+  console.log('home', expense);
+  // useEffect(() => {
+  //   console.log('useEffect --->');
+  //   viewExpenses();
+  // }, [viewExpenses]);
   return (
     <SafeAreaView style={styles.background}>
       <ActionButton
         style={styles.actionButton}
         buttonColor={colors.dark}
-        offsetY={40}
-        offsetX={16}
+        offsetX={20}
         onPress={() => {
-          console.log('hi');
+          navigation.navigate('ExpenseForm');
         }}
       />
       <ScrollView
@@ -58,13 +92,13 @@ const HomeScreen = () => {
         style={styles.background}
         showsVerticalScrollIndicator={false}>
         <View style={styles.background}>
-          <DailyEntry />
-          <DailyEntry />
-          <DailyEntry />
-          <DailyEntry />
-          <DailyEntry />
-          <DailyEntry />
+          {/* <DailyEntry /> */}
+          {renderDailyEntry(expense)}
         </View>
+        <TouchableOpacity
+          style={styles.entryRowBox}
+          onPress={() => console.log('onPress-->', expense)}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -77,7 +111,7 @@ const styles = StyleSheet.create({
   dailyEntryContainer: {
     borderColor: colors.lightGrey,
     borderWidth: 1,
-    margin: 12,
+    margin: 14,
     shadowColor: colors.dark,
     shadowOffset: {
       width: 0,
@@ -94,11 +128,12 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
     backgroundColor: colors.white,
+    marginBottom: 12,
   },
   entryRowBox: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 6,
+    paddingBottom: 12,
     alignItems: 'center',
     backgroundColor: colors.white,
   },
@@ -110,6 +145,7 @@ const styles = StyleSheet.create({
   entryRowName: {
     paddingLeft: 10,
     color: colors.dark,
+    width: '85%',
   },
   entryRowAmount: {
     paddingLeft: 10,
@@ -117,7 +153,10 @@ const styles = StyleSheet.create({
   },
   background: {
     backgroundColor: colors.light,
+    flex: 1,
   },
 });
 
-export default HomeScreen;
+const Home = connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+
+export default Home;
