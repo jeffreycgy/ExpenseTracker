@@ -95,10 +95,6 @@ const HomeScreen = ({ navigation, expense, viewExpenses }) => {
           {/* <DailyEntry /> */}
           {renderDailyEntry(expense)}
         </View>
-        <TouchableOpacity
-          style={styles.entryRowBox}
-          onPress={() => console.log('onPress-->', expense)}
-        />
       </ScrollView>
     </SafeAreaView>
   );
